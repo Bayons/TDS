@@ -1,3 +1,4 @@
+import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -92,7 +93,8 @@ public class User {
 
 
 	public void setPathToHome(String pathToHome) {
-		 Path home = java.nio.file.Path.resolve(pathToHome);
+		File file = new File("UsuariosUnix.dtd");
+		Path home = file.toPath();
 	}
 
 

@@ -158,7 +158,7 @@ public abstract class UserSystemImpl implements UserSystemInterface{
 	public void createNewUser(String name, int uId, String password, Path pathToHome, String fullName, EnumShell shell,
 			Group mainGroup, Group[] secundaryGroups) {
 		
-		User user = new User(name, uId, password, pathToHome, fullName, shell, mainGroup, secundaryGroups);
+		User user = new User(name, uId, password, pathToHome, fullName, shell, mainGroup, secundaryGroups, null);
 		
 		
 	}
@@ -176,7 +176,7 @@ public abstract class UserSystemImpl implements UserSystemInterface{
 				nodeMap = node.getAttributes();
 				node = nodeMap.getNamedItem("uId");
 				
-				if(node == uId){
+				if(Integer.parseInt(node.getNodeValue()) == uId){
 					user = (User) nodeList.item(i);
 				}
 				
@@ -192,7 +192,7 @@ public abstract class UserSystemImpl implements UserSystemInterface{
 	}
 
 	@Override
-	public Group getGroupById1(int gId) {
+	public Group getGroupById(int gId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
