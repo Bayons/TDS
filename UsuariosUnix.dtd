@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT sistema (usuario, grupo)*>
+<!ELEMENT usuario (nombre, contraseña, home, nombreCompleto?)>
+<!ELEMENT nombre (#PCDATA)>
+<!ELEMENT contraseña (#PCDATA)>
+<!ELEMENT home (#PCDATA)>
+<!ELEMENT nombreCompleto (#PCDATA)>
+
+<!ATTLIST usuario uId ID #REQUIRED
+        shell (bash | ash | csh | Zsh | ksh | tcsh) "bash"
+        grupoPrincipal IDREF #REQUIRED
+        grupoSecundarios IDREFS #IMPLIED
+        >
+
+<!ELEMENT grupo EMPTY >
+
+<!ATTLIST grupo nombre CDATA #REQUIRED
+        gId ID #REQUIRED
+        miembros IDREFS #IMPLIED>
