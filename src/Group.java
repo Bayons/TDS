@@ -54,10 +54,16 @@ public class Group {
 	
 	public void removeUser(User user){
 		
-		for(int i=0; i<miembros.length; i++){
-			
-			
+		User[] copy = new User[miembros.length-1];
+		
+		for(int i=0, j=0; i<miembros.length; i++, j++){
+			if (miembros[i].getuId() == user.getuId())
+				i++;
+			copy[j] = miembros[i];
 		}
+		
+		miembros = copy.clone();
+		
 	}
 	
 	public void setNode(Node node) {
