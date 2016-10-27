@@ -31,100 +31,96 @@ public class UserSystemImpl implements UserSystemInterface {
 
 	@Override
 	public void loadFrom(Path pathToXML) {
-		
+
 		FileReader input;
 		InputSource source;
-		Path path =  pathToXML;;
-		
+		Path path = pathToXML;
+		;
+
 		DocumentBuilderFactory domParserFactory;
 		DocumentBuilder parser;
-		
+
 		domParserFactory = DocumentBuilderFactory.newInstance();
 		domParserFactory.setValidating(true);
-		
+
 		try {
-			
+
 			parser = domParserFactory.newDocumentBuilder();
-			
+
 			System.out.println(parser.getClass());
 			System.out.println(parser.isValidating());
-			
+
 			input = new FileReader(path.toFile());
 			source = new InputSource(input);
-			
+
 			parser.setErrorHandler(new SimpleErrorHandler());
 			Document document = parser.parse(source);
-			
+
 			System.out.println(document.getDoctype().getName());
-			
-			int i=0,j=0;
+
+			int i = 0, j = 0;
 			Node node = null;
 			NodeList nodeList = document.getElementsByTagName("grupo");
 			Group group = null;
 			User user = null;
 			Element element = null;
-			
-			for(i=0; i<nodeList.getLength(); i++){
-				
+
+			for (i = 0; i < nodeList.getLength(); i++) {
+
 				group = new Group();
 				element = (Element) nodeList.item(i);
-				
+
 				node = nodeList.item(i);
 				group.setNode(node);
-				
+
 				group.setName(element.getAttributes().getNamedItem("nombre").getNodeValue());
 				group.setgID(Integer.parseInt(element.getAttributes().getNamedItem("gId").getNodeValue()));
-				
+
 				grupos.add(group);
 			}
-			
+
 			nodeList = document.getElementsByTagName("usuario");
-			
-			
-			for(i=0;i<nodeList.getLength();i++){
+
+			for (i = 0; i < nodeList.getLength(); i++) {
 				user = new User();
-				
+
 				element = (Element) nodeList.item(i);
 				user.setNodo(element);
-				
-				
+
 				NodeList nombre = element.getElementsByTagName("nombre");
-				NodeList contraseÃ±a = element.getElementsByTagName("contraseña");
+				NodeList contrasena = element.getElementsByTagName("contraseña");
 				NodeList home = element.getElementsByTagName("home");
 				NodeList nombreCompleto = element.getElementsByTagName("nombreCompleto");
-				
-				
+
 				user.setuId(Integer.parseInt(element.getAttributes().getNamedItem("uId").getNodeValue()));
 				user.setName(nombre.item(0).getFirstChild().getTextContent());
-				user.setPassword(contraseÃ±a.item(0).getFirstChild().getTextContent());
-		        user.setPathToHome(home.item(0).getFirstChild().getTextContent());
-		        user.setFullName(nombreCompleto.item(0).getFirstChild().getTextContent());
-		        user.setShell(element.getAttributes().getNamedItem("shell").getNodeValue());
-		        
-		        for(j=0;j<grupos.size();j++){
-		        	if(grupos.get(j).equals(element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue())){
-		        		user.setMainGroup(grupos.get(j));
-		        	}
-		        }
-		       
-		        
-		        usuarios.add(user);
-			}		
-			
-			
+				user.setPassword(contrasena.item(0).getFirstChild().getTextContent());
+				user.setPathToHome(home.item(0).getFirstChild().getTextContent());
+				user.setFullName(nombreCompleto.item(0).getFirstChild().getTextContent());
+				user.setShell(element.getAttributes().getNamedItem("shell").getNodeValue());
+
+				for (j = 0; j < grupos.size(); j++) {
+					if (grupos.get(j).equals(element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue())) {
+						user.setMainGroup(grupos.get(j));
+					}
+				}
+
+				usuarios.add(user);
+			}
+
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			
+
 		} catch (SAXException e) {
 			e.printStackTrace();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
@@ -180,13 +176,13 @@ public class UserSystemImpl implements UserSystemInterface {
 	}
 
 	@Override
-	public boolean isXMLLoaded() {
+	public boolean isXMLLoaded() {// HACER
 
 		return false;
 	}
 
 	@Override
-	public boolean isModifiedAfterLoaded() {
+	public boolean isModifiedAfterLoaded() {// HACER
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -260,13 +256,16 @@ public class UserSystemImpl implements UserSystemInterface {
 	}
 
 	@Override
-	public void addUserToGroup(User user, Group group) {
-		group.setMiembros(user);
+	public void addUserToGroup(User user, Group group) {// revisar
+		if (user.getMainGroup().getgID() != group.getgID() && !user.isInGroup(group)) {
+			group.setMiembros(user);
+			user.setSecundaryGroups(group);
+		}
 	}
 
 	@Override
 	public void removeUserFromGroup(User user, Group group) {
-		if (user.getMainGroup().getgID() != group.getgID()) {
+		if (user.getMainGroup().getgID() != group.getgID() && user.isInGroup(group)) { // revisar
 			group.removeUser(user);
 			user.removeSecundaryGroup(group);
 		}
@@ -275,9 +274,8 @@ public class UserSystemImpl implements UserSystemInterface {
 	@Override
 	public void removeUserFromSystem(User user) {
 
-		int i = 0;
 		if (usuarios.contains(user)) {
-			for (i = 0; i < usuarios.size(); i++) {
+			for (int i = 0; i < usuarios.size(); i++) {
 				if (usuarios.get(i).equals(user))
 					usuarios.remove(i);
 			}

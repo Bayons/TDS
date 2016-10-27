@@ -44,6 +44,16 @@ public class User {
 
 	}
 
+	public boolean isInGroup(Group group) {
+		if (mainGroup.getgID() == group.getgID())
+			return true;
+		for (int i = 0; i < secundaryGroups.length; i++){
+			if (secundaryGroups[i].getgID()==group.getgID())
+				return true;
+		}
+		return false;
+	}
+
 	public void setSecundaryGroups(Group secundaryGroup) {
 
 		Group[] copy = new Group[secundaryGroups.length + 1];
@@ -132,7 +142,6 @@ public class User {
 	public Group[] getSecundaryGroups() {
 		return secundaryGroups;
 	}
-
 
 	public Node getNodo() {
 		return nodo;
