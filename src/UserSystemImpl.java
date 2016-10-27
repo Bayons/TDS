@@ -60,28 +60,23 @@ public class UserSystemImpl implements UserSystemInterface{
 			
 			System.out.println(document.getDoctype().getName());
 			
-			int i=0;
-			NamedNodeMap nodeMap = null;
+			int i=0,j=0;
 			Node node = null;
 			NodeList nodeList = document.getElementsByTagName("grupo");
 			Group group = null;
 			User user = null;
+			Element element = null;
 			
 			for(i=0; i<nodeList.getLength(); i++){
 				
 				group = new Group();
+				element = (Element) nodeList.item(i);
 				
 				node = nodeList.item(i);
 				group.setNode(node);
 				
-				nodeMap = node.getAttributes();
-				node = nodeMap.getNamedItem("nombre");
-				System.out.println(node.getNodeValue());
-				group.setName(node.getNodeValue());
-				
-				node = nodeMap.getNamedItem("gId");
-				System.out.println(node.getNodeValue());
-				//group.setgID(Integer.parseInt(node.getNodeValue()));
+				group.setName(element.getAttributes().getNamedItem("nombre").getNodeValue());
+				group.setgID(Integer.parseInt(element.getAttributes().getNamedItem("gId").getNodeValue()));
 				
 				grupos.add(group);
 			}
@@ -91,7 +86,8 @@ public class UserSystemImpl implements UserSystemInterface{
 			
 			for(i=0;i<nodeList.getLength();i++){
 				user = new User();
-				Element element = (Element) nodeList.item(i);
+				
+				element = (Element) nodeList.item(i);
 				user.setNodo(element);
 				
 				
@@ -108,7 +104,12 @@ public class UserSystemImpl implements UserSystemInterface{
 		        user.setFullName(nombreCompleto.item(0).getFirstChild().getTextContent());
 		        user.setShell(element.getAttributes().getNamedItem("shell").getNodeValue());
 		        
-		       // user.setMainGroup(element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue());
+		        for(j=0;j<grupos.size();j++){
+		        	if(grupos.get(j).equals(element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue())){
+		        		user.setMainGroup(grupos.get(j));
+		        	}
+		        }
+		       
 		        
 		        usuarios.add(user);
 			}		
@@ -183,8 +184,7 @@ public class UserSystemImpl implements UserSystemInterface{
 	@Override
 	public boolean isXMLLoaded() {
 		
-		
-		
+	
 		return false;
 	}
 
