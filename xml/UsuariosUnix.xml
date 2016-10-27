@@ -1,37 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE sistema SYSTEM "../UsuariosUnix.dtd" >
+<!DOCTYPE sistema SYSTEM "xml/UsuariosUnix.dtd" >
 <sistema>
-  <usuario grupoPrincipal="MojonSerrano" grupoSecundarios="grupo secundario" shell="bash" uId="1">
-    <nombre>Anta</nombre>
-    <contraseña>papito</contraseña>
-    <home>/user/guianta</home>
-    <nombreCompleto>Guillermo Anta</nombreCompleto>
+  <usuario grupoPrincipal="idvalue0" grupoSecundarios="idvalue0" shell="bash" uId="idvalue0">
+    <nombre>nombre</nombre>
+    <contraseña>contraseña</contraseña>
+    <home>home</home>
+    <nombreCompleto>nombreCompleto</nombreCompleto>
   </usuario>
-  
-   <usuario grupoPrincipal="MojonSerrano" grupoSecundarios="grupo secundario" shell="bash" uId="2">
-    <nombre>Anta</nombre>
-    <contraseña>papito</contraseña>
-    <home>/user/guianta</home>
-    <nombreCompleto>Guillermo Anta</nombreCompleto>
-  </usuario>
-  
-   <usuario grupoPrincipal="MojonSerrano" grupoSecundarios="grupo secundario" shell="bash" uId="2">
-    <nombre>Julio</nombre>
-    <contraseña>papito</contraseña>
-    <home>/user/guianta</home>
-    <nombreCompleto>Guillermo Anta</nombreCompleto>
-  </usuario>
-  
-   <usuario grupoPrincipal="MojonSerrano" grupoSecundarios="grupo secundario" shell="bash" uId="2">
-    <nombre>Blanca</nombre>
-    <contraseña>papito</contraseña>
-    <home>/user/guianta</home>
-    <nombreCompleto>Blanca Alonso</nombreCompleto>
-  </usuario>
-  
-  
-  
-  
-  <grupo gId="89" miembros="idmiembros" nombre="MojonSerrano sin blanca"/>
-  <grupo gId="90" miembros="idmiembros" nombre="MojonSerrano"/>
+  <grupo gId="idvalue1" miembros="idvalue0" nombre=""/>
 </sistema>

@@ -150,5 +150,11 @@ public class User {
 	public void setNodo(org.w3c.dom.Node userNode) {
 		this.nodo = userNode;
 	}
+	
+	public void imprimir(){
+		System.out.println("Nombre del usuario: " +name);
+		System.out.println("UID del usuario: " +uId);
+		System.out.println("Contraseña: " +password);
+	}
 
 }

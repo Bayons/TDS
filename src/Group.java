@@ -71,5 +71,10 @@ public class Group {
 		
 	}
 	
+	public void imprimirGrupo(){
+		System.out.println("Nombre del grupo: "+name);
+		System.out.println("GID del grupo: "+gId);
+		
+	}
 	
 }
