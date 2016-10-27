@@ -27,9 +27,9 @@ import org.xml.sax.SAXException;
 public class UserSystemImpl implements UserSystemInterface{
 
 	
-	private ArrayList<User> usuarios = new ArrayList<User>();
+	 ArrayList<User> usuarios = new ArrayList<User>();
 	
-	private ArrayList<Group> grupos = new ArrayList<Group>();
+	 ArrayList<Group> grupos = new ArrayList<Group>();
 	
  	
 	@Override
@@ -102,10 +102,10 @@ public class UserSystemImpl implements UserSystemInterface{
 				
 				
 				user.setuId(Integer.parseInt(element.getAttributes().getNamedItem("uId").getNodeValue()));
-				user.setName(nombre.item(i).getFirstChild().getTextContent());
-				user.setPassword(contraseña.item(i).getFirstChild().getTextContent());
-		        user.setPathToHome(home.item(i).getFirstChild().getTextContent());
-		        user.setFullName(nombreCompleto.item(i).getFirstChild().getTextContent());
+				user.setName(nombre.item(0).getFirstChild().getTextContent());
+				user.setPassword(contraseña.item(0).getFirstChild().getTextContent());
+		        user.setPathToHome(home.item(0).getFirstChild().getTextContent());
+		        user.setFullName(nombreCompleto.item(0).getFirstChild().getTextContent());
 		        user.setShell(element.getAttributes().getNamedItem("shell").getNodeValue());
 		        
 		       // user.setMainGroup(element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue());

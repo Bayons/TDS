@@ -133,9 +133,6 @@ public class User {
 		return secundaryGroups;
 	}
 
-	public void setSecundaryGroups(Group[] secundaryGroups) {
-		this.secundaryGroups = secundaryGroups;
-	}
 
 	public Node getNodo() {
 		return nodo;

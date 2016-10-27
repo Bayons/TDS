@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sistema SYSTEM "../UsuariosUnix.dtd" >
 <sistema>
-  <usuario grupoPrincipal="grupo principal" grupoSecundarios="grupo secundario" shell="bash" uId="10234" nombre="Holi">
-    <nombre>Julio</nombre>
-    <contraseña>contraseña</contraseña>
-    <home>home</home>
-    <nombreCompleto>nombreCompleto</nombreCompleto>
+  <usuario grupoPrincipal="MojonSerrano" grupoSecundarios="grupo secundario" shell="bash" uId="1">
+    <nombre>Anta</nombre>
+    <contraseña>papito</contraseña>
+    <home>/user/guianta</home>
+    <nombreCompleto>Guillermo Anta</nombreCompleto>
   </usuario>
-  <grupo gId="gid" miembros="idmiembros" nombre="prueba"/>
+  
+   <usuario grupoPrincipal="MojonSerrano" grupoSecundarios="grupo secundario" shell="bash" uId="2">
+    <nombre>Anta</nombre>
+    <contraseña>papito</contraseña>
+    <home>/user/guianta</home>
+    <nombreCompleto>Guillermo Anta</nombreCompleto>
+  </usuario>
+  <grupo gId="89" miembros="idmiembros" nombre="MojonSerrano"/>
 </sistema>
