@@ -14,5 +14,24 @@
     <home>/user/guianta</home>
     <nombreCompleto>Guillermo Anta</nombreCompleto>
   </usuario>
-  <grupo gId="89" miembros="idmiembros" nombre="MojonSerrano"/>
+  
+   <usuario grupoPrincipal="MojonSerrano" grupoSecundarios="grupo secundario" shell="bash" uId="2">
+    <nombre>Julio</nombre>
+    <contraseña>papito</contraseña>
+    <home>/user/guianta</home>
+    <nombreCompleto>Guillermo Anta</nombreCompleto>
+  </usuario>
+  
+   <usuario grupoPrincipal="MojonSerrano" grupoSecundarios="grupo secundario" shell="bash" uId="2">
+    <nombre>Blanca</nombre>
+    <contraseña>papito</contraseña>
+    <home>/user/guianta</home>
+    <nombreCompleto>Blanca Alonso</nombreCompleto>
+  </usuario>
+  
+  
+  
+  
+  <grupo gId="89" miembros="idmiembros" nombre="MojonSerrano sin blanca"/>
+  <grupo gId="90" miembros="idmiembros" nombre="MojonSerrano"/>
 </sistema>
