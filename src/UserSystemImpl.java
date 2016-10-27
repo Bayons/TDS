@@ -23,15 +23,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+public class UserSystemImpl implements UserSystemInterface {
 
-public class UserSystemImpl implements UserSystemInterface{
+	ArrayList<User> usuarios = new ArrayList<User>();
 
-	
-	 ArrayList<User> usuarios = new ArrayList<User>();
-	
-	 ArrayList<Group> grupos = new ArrayList<Group>();
-	
- 	
+	ArrayList<Group> grupos = new ArrayList<Group>();
+
 	@Override
 	public void loadFrom(Path pathToXML) {
 		
@@ -92,7 +89,7 @@ public class UserSystemImpl implements UserSystemInterface{
 				
 				
 				NodeList nombre = element.getElementsByTagName("nombre");
-				NodeList contraseña = element.getElementsByTagName("contraseña");
+				NodeList contraseña = element.getElementsByTagName("contrase�a");
 				NodeList home = element.getElementsByTagName("home");
 				NodeList nombreCompleto = element.getElementsByTagName("nombreCompleto");
 				
@@ -128,63 +125,63 @@ public class UserSystemImpl implements UserSystemInterface{
 			e.printStackTrace();
 		}
 		
-	}		
-		
+	}
+
 	@Override
-	public void updateTo(Path pathToXML)  {
-		
+	public void updateTo(Path pathToXML) {
+
 		FileReader input;
 		InputSource source;
-		Path path =  pathToXML;;
-		
+		Path path = pathToXML;
+		;
+
 		DocumentBuilderFactory domParserFactory;
 		DocumentBuilder parser;
-		
+
 		domParserFactory = DocumentBuilderFactory.newInstance();
 		domParserFactory.setValidating(true);
-		
+
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		Transformer transformer;
-		
+
 		try {
-			
+
 			parser = domParserFactory.newDocumentBuilder();
-			
+
 			input = new FileReader(path.toFile());
 			source = new InputSource(input);
-			
+
 			Document document = parser.parse(source);
-			
+
 			transformer = tFactory.newTransformer();
 			DOMSource domSource = new DOMSource(document);
 			StreamResult result = new StreamResult(System.out);
-			
+
 			transformer.transform(domSource, result);
-			
+
 		} catch (TransformerConfigurationException e1) {
 			e1.printStackTrace();
 		} catch (TransformerException e) {
 			e.printStackTrace();
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			
+
 		} catch (SAXException e) {
 			e.printStackTrace();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
-			
+
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
 	public boolean isXMLLoaded() {
-		
-	
+
 		return false;
 	}
 
@@ -197,88 +194,91 @@ public class UserSystemImpl implements UserSystemInterface{
 	@Override
 	public void createNewUser(String name, int uId, String password, Path pathToHome, String fullName, EnumShell shell,
 			Group mainGroup, Group[] secundaryGroups) {
-		
+
 		User user = new User(name, uId, password, pathToHome, fullName, shell, mainGroup, secundaryGroups, null);
 		usuarios.add(user);
-		
+
 	}
 
 	@Override
 	public User getUserById(int uId) {
 		User user = null;
-		for (int i=0; i<usuarios.size(); i++){
-			if(usuarios.get(i).getuId()== uId)
+		for (int i = 0; i < usuarios.size(); i++) {
+			if (usuarios.get(i).getuId() == uId) {
 				user = usuarios.get(i);
 				return user;
+			}
 		}
-		
-		return  null;
+
+		return null;
 	}
 
 	@Override
 	public User getUserByName(String name) {
 		User user = null;
-		for (int i=0; i<usuarios.size(); i++){
-			if(usuarios.get(i).getName().equals(name))
+		for (int i = 0; i < usuarios.size(); i++) {
+			if (usuarios.get(i).getName().equals(name)) {
 				user = usuarios.get(i);
 				return user;
+			}
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public Group getGroupById(int gId) {
 		Group group = null;
-		for (int i=0; i<grupos.size(); i++){
-			if(grupos.get(i).getgID() == gId)
+		for (int i = 0; i < grupos.size(); i++) {
+			if (grupos.get(i).getgID() == gId) {
 				group = grupos.get(i);
 				return group;
+			}
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public Group getGroupByName(String name) {
 		Group group = null;
-		for (int i=0; i<grupos.size(); i++){
-			if(grupos.get(i).getName().equals(name))
+		for (int i = 0; i < grupos.size(); i++) {
+			if (grupos.get(i).getName().equals(name)) {
 				group = grupos.get(i);
 				return group;
+			}
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public void createNewGroup(String name, int gId) {
-		
+
 		Group group = new Group(name, gId);
 		grupos.add(group);
 	}
 
 	@Override
 	public void addUserToGroup(User user, Group group) {
-		
 		group.setMiembros(user);
 	}
 
 	@Override
 	public void removeUserFromGroup(User user, Group group) {
-	    if(user.getMainGroup().getgID()!=group.getgID()){
-	      group.removeUser(user);
-	      user.removeSecundaryGroup(group);
-	    }
-	  }
+		if (user.getMainGroup().getgID() != group.getgID()) {
+			group.removeUser(user);
+			user.removeSecundaryGroup(group);
+		}
+	}
 
 	@Override
 	public void removeUserFromSystem(User user) {
-		
-		int i=0;
-		if(usuarios.contains(user)){
-			for(i=0; i<usuarios.size();i++){
-				if(usuarios.get(i).equals(user))
+
+		int i = 0;
+		if (usuarios.contains(user)) {
+			for (i = 0; i < usuarios.size(); i++) {
+				if (usuarios.get(i).equals(user))
 					usuarios.remove(i);
 			}
 		}
@@ -286,17 +286,14 @@ public class UserSystemImpl implements UserSystemInterface{
 
 	@Override
 	public void removeGroupFromSystem(Group group) {
-		
-		int i=0;
-		if(grupos.contains(group)){
-			for(i=0; i<grupos.size();i++){
-				if(grupos.get(i).equals(group))
+
+		int i = 0;
+		if (grupos.contains(group)) {
+			for (i = 0; i < grupos.size(); i++) {
+				if (grupos.get(i).equals(group))
 					grupos.remove(i);
 			}
 		}
 	}
 
 }
-
-
-	
