@@ -23,7 +23,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 
-public abstract class UserSystemImpl implements UserSystemInterface{
+public class UserSystemImpl implements UserSystemInterface{
 
 	
 	private ArrayList<User> usuarios = new ArrayList<User>();
@@ -31,7 +31,6 @@ public abstract class UserSystemImpl implements UserSystemInterface{
 	private ArrayList<Group> grupos = new ArrayList<Group>();
 	
  	
-	
 	@Override
 	public void loadFrom(Path pathToXML) {
 		
@@ -60,14 +59,35 @@ public abstract class UserSystemImpl implements UserSystemInterface{
 			
 			System.out.println(document.getDoctype().getName());
 			
-
+			int i=0;
 			NamedNodeMap nodeMap = null;
 			Node node = null;
-			NodeList nodeList = document.getElementsByTagName("usuario");
+			NodeList nodeList = document.getElementsByTagName("grupo");
+			Group group = null;
 			User user = null;
 			
+			for(i=0; i<nodeList.getLength(); i++){
+				
+				group = new Group();
+				
+				node = nodeList.item(i);
+				group.setNode(node);
+				
+				nodeMap = node.getAttributes();
+				node = nodeMap.getNamedItem("nombre");
+				System.out.println(node.getNodeValue());
+				group.setName(node.getNodeValue());
+				
+				node = nodeMap.getNamedItem("gId");
+				System.out.println(node.getNodeValue());
+				//group.setgID(Integer.parseInt(node.getNodeValue()));
+				
+				grupos.add(group);
+			}
 			
-			for (int i=0; i<nodeList.getLength();i++) {
+			nodeList = document.getElementsByTagName("usuario");
+			
+			for (i=0; i<nodeList.getLength();i++) {
 				user = new User();
 				
 				node = nodeList.item(i);
@@ -75,9 +95,11 @@ public abstract class UserSystemImpl implements UserSystemInterface{
 				
 				nodeMap = node.getAttributes();
 				node = nodeMap.getNamedItem("uId");
-				user.setuId(Integer.parseInt(node.getNodeValue()));
+				System.out.println(node.getNodeValue());
+				//user.setuId(Integer.parseInt(node.getNodeValue()));
 				
 				node = nodeMap.getNamedItem("nombre");
+				System.out.println(node.getNodeValue());
 				user.setName(node.getNodeValue());
 				
 				node = nodeMap.getNamedItem("contraseña");
@@ -86,38 +108,18 @@ public abstract class UserSystemImpl implements UserSystemInterface{
 				node = nodeMap.getNamedItem("home");
 				user.setPathToHome(node.getNodeValue());
 				
+				node = nodeMap.getNamedItem("nombreCompleto");
+				user.setFullName(node.getNodeValue());
 				
+				node = nodeMap.getNamedItem("shell");
+				user.setShell(node.getNodeValue());
+				
+				//node = nodeMap.getNamedItem("grupoPrincipal");
+				//user.setMainGroup(node.getNodeValue());
 			
+				usuarios.add(user);
 			}
 			
-			
-			
-			nodeList = document.getElementsByTagName("libro");
-			
-			for (int i=0; i<nodeList.getLength();i++) {
-			node = nodeList.item(i);
-			nodeMap = node.getAttributes();
-			node = nodeMap.getNamedItem("referencia");
-			System.out.println(node.getNodeName() + "-> " +
-			 node.getNodeValue());
-			}
-			
-			TransformerFactory tFactory = TransformerFactory.newInstance();
-			Transformer transformer;
-			
-			try {
-				
-				transformer = tFactory.newTransformer();
-				DOMSource domSource = new DOMSource(document);
-				StreamResult result = new StreamResult(System.out);
-				
-				transformer.transform(domSource, result);
-				
-			} catch (TransformerConfigurationException e1) {
-				e1.printStackTrace();
-			} catch (TransformerException e) {
-				e.printStackTrace();
-			}
 			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
@@ -139,6 +141,22 @@ public abstract class UserSystemImpl implements UserSystemInterface{
 	@Override
 	public void updateTo(Path pathToXML) {
 		
+		/*TransformerFactory tFactory = TransformerFactory.newInstance();
+		Transformer transformer;
+		
+		try {
+			
+			transformer = tFactory.newTransformer();
+			DOMSource domSource = new DOMSource(document);
+			StreamResult result = new StreamResult(System.out);
+			
+			transformer.transform(domSource, result);
+			
+		} catch (TransformerConfigurationException e1) {
+			e1.printStackTrace();
+		} catch (TransformerException e) {
+			e.printStackTrace();
+		}*/
 		
 	}
 
@@ -159,66 +177,70 @@ public abstract class UserSystemImpl implements UserSystemInterface{
 			Group mainGroup, Group[] secundaryGroups) {
 		
 		User user = new User(name, uId, password, pathToHome, fullName, shell, mainGroup, secundaryGroups, null);
-		
+		usuarios.add(user);
 		
 	}
 
 	@Override
 	public User getUserById(int uId) {
-		
-		NodeList nodeList = document.getElementsByTagName("usuario");
-		NamedNodeMap nodeMap = null;
-		Node node = null;
 		User user = null;
+		for (int i=0; i<usuarios.size(); i++){
+			if(usuarios.get(i).getuId()== uId)
+				user = usuarios.get(i);
+		}
 		
-		for (int i=0; i<nodeList.getLength();i++) {
-				node = nodeList.item(i);
-				nodeMap = node.getAttributes();
-				node = nodeMap.getNamedItem("uId");
-				
-				if(Integer.parseInt(node.getNodeValue()) == uId){
-					user = (User) nodeList.item(i);
-				}
-				
-			}
+		return  user;
+	}
+
+	@Override
+	public User getUserByName(String name) {
+		User user = null;
+		for (int i=0; i<usuarios.size(); i++){
+			if(usuarios.get(i).getName().equals(name))
+				user = usuarios.get(i);
+		}
 		
 		return user;
 	}
 
 	@Override
-	public User getUserByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Group getGroupById(int gId) {
-		// TODO Auto-generated method stub
-		return null;
+		Group group = null;
+		for (int i=0; i<grupos.size(); i++){
+			if(grupos.get(i).getgID() == gId)
+				group = grupos.get(i);
+		}
+		
+		return group;
 	}
 
 	@Override
 	public Group getGroupByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		Group group = null;
+		for (int i=0; i<grupos.size(); i++){
+			if(grupos.get(i).getName().equals(name))
+				group = grupos.get(i);
+		}
+		
+		return group;
 	}
 
 	@Override
 	public void createNewGroup(String name, int gId) {
 		
 		Group group = new Group(name, gId);
-		
+		grupos.add(group);
 	}
 
 	@Override
 	public void addUserToGroup(User user, Group group) {
-		// TODO Auto-generated method stub
 		
+		group.setMiembros(user);
 	}
 
 	@Override
 	public void removeUserFromGroup(User user, Group group) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

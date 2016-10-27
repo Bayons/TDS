@@ -93,8 +93,9 @@ public class User {
 
 
 	public void setPathToHome(String pathToHome) {
-		File file = new File("UsuariosUnix.dtd");
+		File file = new File(pathToHome);
 		Path home = file.toPath();
+		this.pathToHome = home;
 	}
 
 
@@ -113,8 +114,10 @@ public class User {
 	}
 
 
-	public void setShell(EnumShell shell) {
-		this.shell = shell;
+	public void setShell(String shell) {
+		
+		EnumShell enumShell = EnumShell.valueOf(shell);
+		this.shell = enumShell;
 	}
 
 
