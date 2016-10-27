@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!ELEMENT sistema (usuario, grupo)*>
-<!ELEMENT usuario (nombre, contraseña, home, nombreCompleto?)>
+<!ELEMENT usuario (nombre, password, home, nombreCompleto?)>
 <!ELEMENT nombre (#PCDATA)>
-<!ELEMENT contraseña (#PCDATA)>
+<!ELEMENT password (#PCDATA)>
 <!ELEMENT home (#PCDATA)>
 <!ELEMENT nombreCompleto (#PCDATA)>
 

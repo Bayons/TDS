@@ -5,7 +5,7 @@ public class Main {
 	public static void main(String[] args){
 		
 		UserSystemImpl programa = new UserSystemImpl();
-		Path xml = FileSystems.getDefault().getPath("xml", "UsuariosUnix.xml");
+		Path xml = FileSystems.getDefault().getPath("", "UsuariosUnix.xml");
 		programa.loadFrom(xml);
 		int i=0;
 		for (i=0; i<programa.grupos.size();i++){

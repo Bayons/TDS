@@ -1,6 +1,9 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -8,6 +11,8 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -29,13 +34,16 @@ public class UserSystemImpl implements UserSystemInterface {
 
 	ArrayList<Group> grupos = new ArrayList<Group>();
 
+	boolean modified = false;
+
+	Document document;
+
 	@Override
 	public void loadFrom(Path pathToXML) {
 
 		FileReader input;
 		InputSource source;
 		Path path = pathToXML;
-		;
 
 		DocumentBuilderFactory domParserFactory;
 		DocumentBuilder parser;
@@ -54,7 +62,7 @@ public class UserSystemImpl implements UserSystemInterface {
 			source = new InputSource(input);
 
 			parser.setErrorHandler(new SimpleErrorHandler());
-			Document document = parser.parse(source);
+			document = parser.parse(source);
 
 			System.out.println(document.getDoctype().getName());
 
@@ -88,13 +96,13 @@ public class UserSystemImpl implements UserSystemInterface {
 				user.setNodo(element);
 
 				NodeList nombre = element.getElementsByTagName("nombre");
-				NodeList contrasena = element.getElementsByTagName("contraseña");
+				NodeList password = element.getElementsByTagName("password");
 				NodeList home = element.getElementsByTagName("home");
 				NodeList nombreCompleto = element.getElementsByTagName("nombreCompleto");
 
 				user.setuId(Integer.parseInt(element.getAttributes().getNamedItem("uId").getNodeValue()));
 				user.setName(nombre.item(0).getFirstChild().getTextContent());
-				user.setPassword(contrasena.item(0).getFirstChild().getTextContent());
+				user.setPassword(password.item(0).getFirstChild().getTextContent());
 				user.setPathToHome(home.item(0).getFirstChild().getTextContent());
 				user.setFullName(nombreCompleto.item(0).getFirstChild().getTextContent());
 				user.setShell(element.getAttributes().getNamedItem("shell").getNodeValue());
@@ -121,15 +129,16 @@ public class UserSystemImpl implements UserSystemInterface {
 			e.printStackTrace();
 		}
 
+		modified = false;
 	}
 
 	@Override
 	public void updateTo(Path pathToXML) {
 
-		FileReader input;
-		InputSource source;
+		File file;
+		FileWriter output;
+		Source source;
 		Path path = pathToXML;
-		;
 
 		DocumentBuilderFactory domParserFactory;
 		DocumentBuilder parser;
@@ -141,19 +150,25 @@ public class UserSystemImpl implements UserSystemInterface {
 		Transformer transformer;
 
 		try {
-
+			
+			
+			//Rellenar XML 
+			
+			output = new FileWriter(pathToXML.toFile());
 			parser = domParserFactory.newDocumentBuilder();
+			source = new DOMSource(document);
+			PrintWriter pw = new PrintWriter(output);
+			Result result = new StreamResult(pw);
+			
 
-			input = new FileReader(path.toFile());
-			source = new InputSource(input);
+			document = parser.newDocument();
 
-			Document document = parser.parse(source);
-
+			
+			
 			transformer = tFactory.newTransformer();
-			DOMSource domSource = new DOMSource(document);
-			StreamResult result = new StreamResult(System.out);
+			
 
-			transformer.transform(domSource, result);
+			transformer.transform(source, result);
 
 		} catch (TransformerConfigurationException e1) {
 			e1.printStackTrace();
@@ -161,9 +176,6 @@ public class UserSystemImpl implements UserSystemInterface {
 			e.printStackTrace();
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-
-		} catch (SAXException e) {
 			e.printStackTrace();
 
 		} catch (IOException e) {
@@ -176,24 +188,35 @@ public class UserSystemImpl implements UserSystemInterface {
 	}
 
 	@Override
-	public boolean isXMLLoaded() {// HACER
-
+	public boolean isXMLLoaded() {
+		if (document != null)
+			return true;
 		return false;
 	}
 
 	@Override
-	public boolean isModifiedAfterLoaded() {// HACER
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isModifiedAfterLoaded() {
+		return modified;
 	}
 
 	@Override
 	public void createNewUser(String name, int uId, String password, Path pathToHome, String fullName, EnumShell shell,
 			Group mainGroup, Group[] secundaryGroups) {
 
-		User user = new User(name, uId, password, pathToHome, fullName, shell, mainGroup, secundaryGroups, null);
-		usuarios.add(user);
+		boolean exists = false;
 
+		for (int i = 0; i < usuarios.size(); i++) {
+			if (uId == usuarios.get(i).getuId()) {
+				exists = true;
+				break;
+			}
+		}
+
+		if (!exists) {
+			User user = new User(name, uId, password, pathToHome, fullName, shell, mainGroup, secundaryGroups, null);
+			usuarios.add(user);
+			modified = true;
+		}
 	}
 
 	@Override
@@ -251,23 +274,37 @@ public class UserSystemImpl implements UserSystemInterface {
 	@Override
 	public void createNewGroup(String name, int gId) {
 
-		Group group = new Group(name, gId);
-		grupos.add(group);
+		boolean exists = false;
+
+		for (int i = 0; i < grupos.size(); i++) {
+			if (grupos.get(i).getgID() == gId) {
+				exists = true;
+				break;
+			}
+		}
+
+		if (!exists) {
+			Group group = new Group(name, gId);
+			grupos.add(group);
+			modified = true;
+		}
 	}
 
 	@Override
-	public void addUserToGroup(User user, Group group) {// revisar
+	public void addUserToGroup(User user, Group group) {
 		if (user.getMainGroup().getgID() != group.getgID() && !user.isInGroup(group)) {
 			group.setMiembros(user);
 			user.setSecundaryGroups(group);
+			modified = true;
 		}
 	}
 
 	@Override
 	public void removeUserFromGroup(User user, Group group) {
-		if (user.getMainGroup().getgID() != group.getgID() && user.isInGroup(group)) { // revisar
+		if (user.getMainGroup().getgID() != group.getgID() && user.isInGroup(group)) {
 			group.removeUser(user);
 			user.removeSecundaryGroup(group);
+			modified = true;
 		}
 	}
 
@@ -276,8 +313,10 @@ public class UserSystemImpl implements UserSystemInterface {
 
 		if (usuarios.contains(user)) {
 			for (int i = 0; i < usuarios.size(); i++) {
-				if (usuarios.get(i).equals(user))
+				if (usuarios.get(i).equals(user)) {
 					usuarios.remove(i);
+					modified = true;
+				}
 			}
 		}
 	}
@@ -288,8 +327,10 @@ public class UserSystemImpl implements UserSystemInterface {
 		int i = 0;
 		if (grupos.contains(group)) {
 			for (i = 0; i < grupos.size(); i++) {
-				if (grupos.get(i).equals(group))
+				if (grupos.get(i).equals(group)) {
 					grupos.remove(i);
+					modified = true;
+				}
 			}
 		}
 	}
