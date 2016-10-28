@@ -156,14 +156,21 @@ public class UserSystemImpl implements UserSystemInterface {
 			
 			output = new FileWriter(pathToXML.toFile());
 			parser = domParserFactory.newDocumentBuilder();
+			document = parser.newDocument();
 			source = new DOMSource(document);
 			PrintWriter pw = new PrintWriter(output);
 			Result result = new StreamResult(pw);
-			
 
-			document = parser.newDocument();
-
+			//Crear nodos
+			Element sistema = document.createElement("sistema");
+			document.appendChild(sistema);
 			
+			Element usuarioNuevo;
+			Element grupoNuevo;
+			for (int i = 0; i < usuarios.size(); i++){
+				usuarioNuevo = document.createElement("usuario");
+				usuarioNuevo.setAttribute("grupoPrincipal", /*su grupo principal*/);
+			}
 			
 			transformer = tFactory.newTransformer();
 			
