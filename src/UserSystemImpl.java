@@ -359,6 +359,7 @@ public class UserSystemImpl implements UserSystemInterface {
 	public Group getGroupByName(String name) {
 		Group group = null;
 		for (int i = 0; i < grupos.size(); i++) {
+			//System.out.println(grupos.get(i).getName() +"----------" +name);
 			if (grupos.get(i).getName().equals(name)) {
 				group = grupos.get(i);
 				return group;
@@ -383,6 +384,7 @@ public class UserSystemImpl implements UserSystemInterface {
 		if (!exists) {
 			Group group = new Group(name, gId);
 			grupos.add(group);
+			
 			modified = true;
 		}
 	}

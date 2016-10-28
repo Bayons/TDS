@@ -76,12 +76,13 @@ public class Group {
 	public void imprimirGrupo(){
 		System.out.println("Nombre del grupo: "+name);
 		  System.out.println("GID del grupo: "+gId);
-		  System.out.println("Usuarios del grupo: " +miembros.length);
+		  System.out.println("Usuarios del grupo: " +miembros.length +"\n");
 		  
 		  if(miembros.length>0){
 		   for(int i=0; i<miembros.length; i++){
 		    
 		    System.out.println("   Nombre: " +miembros[i].getName() +"\n   uId: " +miembros[i].getuId());
+		    System.out.println();
 		   }
 		  }
 		  

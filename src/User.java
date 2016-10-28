@@ -157,6 +157,7 @@ public class User {
 		  System.out.println("Nombre del usuario: " +name);
 		  System.out.println("UID del usuario: " +uId);
 		  System.out.println("Pass: " +password);
+		  System.out.println("MG: " +mainGroup +"\n");
 		 }
 
 }

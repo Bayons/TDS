@@ -13,27 +13,28 @@ public class Main {
 		imprimirListas();
 
 		programa.createNewGroup("grupoNuevo", 3);
+		
 		programa.createNewGroup("grupoParaBorrar", 4);
 
+		
 		programa.createNewUser("Pepe", 24, "1234", FileSystems.getDefault().getPath("", ""), "Pepelu", EnumShell.bash,
-				programa.getGroupByName("grupoNuevo"), new Group[0]);
+				programa.getGroupById(3), new Group[0]);
 		
 		programa.createNewUser("usuarioParaBorrar", 25, "1234", FileSystems.getDefault().getPath("", ""), "Pepelu",
-				EnumShell.bash, programa.getGroupByName("grupoparaBorrar"), new Group[0]);
+				EnumShell.bash, programa.getGroupById(4), new Group[0]);
 		
 		
-		User usuario = programa.getUserById(24);
-		Group grupo = programa.getGroupById(4);
+		User usuario = programa.getUserByName("usuarioParaBorrar");
+		Group grupo = programa.getGroupById(3);
 		
 		
-		grupo.imprimirGrupo();
-		
-		System.out.println("Añadimos usuario a grupo "+usuario.getName()+" "+grupo.getName());
+		System.out.println("\n\nAñadimos usuario a grupo "+usuario.getName()+" "+grupo.getName() +"\n\n");
 		programa.addUserToGroup(usuario, grupo);
+		programa.addUserToGroup(programa.getUserByName("Bayons"), grupo);
 		
 		grupo.imprimirGrupo();
-		System.out.println("Eliminamos usuario del grupo");
-		programa.removeUserFromGroup(usuario, grupo);
+		System.out.println("\n\nEliminamos usuario del grupo\n\n");
+		//programa.removeUserFromGroup(usuario, grupo);
 		
 		grupo.imprimirGrupo();
 		
