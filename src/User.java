@@ -20,7 +20,7 @@ public class User {
 
 	private Group mainGroup;
 
-	private Group[] secundaryGroups;
+	private Group[] secundaryGroups = new Group[0];
 
 	private Node nodo;
 
@@ -55,13 +55,15 @@ public class User {
 	}
 
 	public void setSecundaryGroups(Group secundaryGroup) {
-
+		
+		
 		Group[] copy = new Group[secundaryGroups.length + 1];
 
 		for (int i = 0; i < secundaryGroups.length; i++)
 			copy[i] = secundaryGroups[i];
 
 		copy[copy.length - 1] = secundaryGroup;
+		
 		secundaryGroups = copy.clone();
 
 	}
@@ -151,10 +153,10 @@ public class User {
 		this.nodo = userNode;
 	}
 	
-	public void imprimir(){
-		System.out.println("Nombre del usuario: " +name);
-		System.out.println("UID del usuario: " +uId);
-		System.out.println("Contraseña: " +password);
-	}
+	public void imprimirUsuario(){
+		  System.out.println("Nombre del usuario: " +name);
+		  System.out.println("UID del usuario: " +uId);
+		  System.out.println("Pass: " +password);
+		 }
 
 }

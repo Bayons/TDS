@@ -82,15 +82,20 @@ public class UserSystemImpl implements UserSystemInterface {
 				group.setNode(node);
 
 				group.setName(element.getAttributes().getNamedItem("nombre").getNodeValue());
+				System.out.println(element.getAttributes().getNamedItem("nombre").getNodeValue());
 				group.setgID(Integer.parseInt(element.getAttributes().getNamedItem("gId").getNodeValue()));
-
+				System.out.println(element.getAttributes().getNamedItem("gId").getNodeValue());
+				
+				
+				
 				grupos.add(group);
+				
 			}
 
 			nodeList = document.getElementsByTagName("usuario");
 			String grupSecs, grupPrinc;
 			int posIni;
-			Group nuevoGrupSec;
+			Group nuevoGrupSec = null;
 
 			for (i = 0; i < nodeList.getLength(); i++) {
 				user = new User();
@@ -111,19 +116,30 @@ public class UserSystemImpl implements UserSystemInterface {
 				user.setShell(element.getAttributes().getNamedItem("shell").getNodeValue());
 
 				grupPrinc = element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue();
+				
 				for (j = 0; j < grupos.size(); j++) {
-					if (grupos.get(j).equals(grupPrinc)) {
+					if (grupos.get(j).getName().equals(grupPrinc)) {
 						user.setMainGroup(grupos.get(j));
+						
 					}
 				}
 
 				grupSecs = element.getAttributes().getNamedItem("grupoSecundarios").getNodeValue();
 				posIni = 0;
 				for (int cont = 0; cont < grupSecs.length(); cont++) {
-
-					// añadimos grupo secundario si existe
-					if (grupSecs.charAt(cont) == ','
+				
+				
+					
+					if(!grupSecs.equals("null")){
+						
+						user.setSecundaryGroups(getGroupByName(grupSecs));
+					}
+					
+					
+					// aï¿½adimos grupo secundario si existe
+					if (grupSecs.charAt(cont)==(',')
 							&& (nuevoGrupSec = getGroupByName(grupSecs.substring(posIni, cont - 1))) != null) {
+						System.out.println("a que aqui no entra");
 						user.setSecundaryGroups(nuevoGrupSec);
 						cont++; // nos saltamos el espacio
 						posIni = cont;
@@ -194,10 +210,17 @@ public class UserSystemImpl implements UserSystemInterface {
 
 			for (int i = 0; i < usuarios.size(); i++) {
 				usuarioNuevo = document.createElement("usuario");
+				
+				
+				System.out.println("nombre "+usuarios.get(i).getName()+" "+usuarios.get(i).getMainGroup().getName()+" "+i+"usuarios"+ usuarios.size());
+				
 				usuarioNuevo.setAttribute("grupoPrincipal", usuarios.get(i).getMainGroup().getName());
+				
 
-				if (usuarios.get(i).getSecundaryGroups().length == 0) {
-					// Añade todos los grupos secundarios separados por una coma
+
+				
+				if (usuarios.get(i).getSecundaryGroups() == null) {
+					// Aï¿½ade todos los grupos secundarios separados por una coma
 					// y un espacio
 					usuarioNuevo.setAttribute("grupoSecundarios", "null");
 				} else {
@@ -366,13 +389,17 @@ public class UserSystemImpl implements UserSystemInterface {
 
 	@Override
 	public void addUserToGroup(User user, Group group) {
-		if (user.getMainGroup().getgID() != group.getgID() && !user.isInGroup(group)) {
-			group.setMiembros(user);
-			user.setSecundaryGroups(group);
-			modified = true;
-		}
-	}
-
+		if(user != null && group != null){
+			
+		    	System.out.println(user.getMainGroup());
+		    	
+			   if (user.getMainGroup().getgID() != group.getgID() && !user.isInGroup(group)) {
+			    group.setMiembros(user);
+			    user.setSecundaryGroups(group);
+			    modified = true;
+			   }
+			  }
+			 }
 	@Override
 	public void removeUserFromGroup(User user, Group group) {
 		if (user.getMainGroup().getgID() != group.getgID() && user.isInGroup(group)) {
@@ -381,8 +408,9 @@ public class UserSystemImpl implements UserSystemInterface {
 			modified = true;
 		}
 	}
-
+	//No funciona
 	@Override
+	
 	public void removeUserFromSystem(User user) {
 
 		if (usuarios.contains(user)) {

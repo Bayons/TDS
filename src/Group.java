@@ -6,7 +6,7 @@ public class Group {
 	
 	private int gId;
 	
-	private User[] miembros;
+	private User[] miembros = new User[0];
 	
 	private Node node;
 	
@@ -16,6 +16,7 @@ public class Group {
 		
 		this.name = name;
 		this.gId = gId;
+		
 	}
 
 	public Group(){}
@@ -49,6 +50,7 @@ public class Group {
 		
 		copy[copy.length-1]=usuario;
 		miembros=copy.clone();
+		System.out.println("tamaño "+miembros.length);
 		
 	}
 	
@@ -73,8 +75,16 @@ public class Group {
 	
 	public void imprimirGrupo(){
 		System.out.println("Nombre del grupo: "+name);
-		System.out.println("GID del grupo: "+gId);
-		
-	}
+		  System.out.println("GID del grupo: "+gId);
+		  System.out.println("Usuarios del grupo: " +miembros.length);
+		  
+		  if(miembros.length>0){
+		   for(int i=0; i<miembros.length; i++){
+		    
+		    System.out.println("   Nombre: " +miembros[i].getName() +"\n   uId: " +miembros[i].getuId());
+		   }
+		  }
+		  
+		 }
 	
 }
