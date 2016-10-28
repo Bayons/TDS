@@ -57,3 +57,5 @@ src/UserSystemImpl.java
 *.java
 
 bin/Main.class
+
+*.java
