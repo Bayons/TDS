@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sistema SYSTEM "UsuariosUnix.dtd" >
 <sistema>
-  <usuario grupoPrincipal="GRUPOPUTO 1" grupoSecundarios="null" shell="bash" uId="8">
+  <usuario grupoPrincipal="GRUPONUEVO 1" grupoSecundarios="null" shell="bash" uId="8">
     <nombre>Bayons</nombre>
     <password>secreto</password>
     <home>home</home>
     <nombreCompleto>MiguelBayonSanz</nombreCompleto>
   </usuario>
-<usuario grupoPrincipal="PUTOGRUPO 2" grupoSecundarios="MojonSerraner" shell="bash" uId="9">
+<usuario grupoPrincipal="NUEVOGRUPO 2" grupoSecundarios="jamonSerraner" shell="bash" uId="9">
     <nombre>Antits</nombre>
     <password>contrasena</password>
     <home>home</home>
     <nombreCompleto>GuillermoAnta</nombreCompleto>
   </usuario>
-  <grupo gId="1" miembros="2" nombre="GRUPOPUTO 1"/>
-  <grupo gId="2" miembros="4" nombre="PUTOGRUPO 2"/>
+  <grupo gId="1" miembros="2" nombre="GRUPONUEVO 1"/>
+  <grupo gId="2" miembros="4" nombre="NUEVOGRUPO 2"/>
     
 </sistema>

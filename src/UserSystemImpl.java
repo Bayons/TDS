@@ -61,16 +61,11 @@ public class UserSystemImpl implements UserSystemInterface {
 
 			parser = domParserFactory.newDocumentBuilder();
 
-			System.out.println(parser.getClass());
-			System.out.println(parser.isValidating());
-
 			input = new FileReader(path.toFile());
 			source = new InputSource(input);
 
 			parser.setErrorHandler(new SimpleErrorHandler());
 			document = parser.parse(source);
-
-			System.out.println(document.getDoctype().getName());
 
 			int i = 0, j = 0;
 			Node node = null;
@@ -87,9 +82,7 @@ public class UserSystemImpl implements UserSystemInterface {
 				node = nodeList.item(i);
 
 				group.setName(element.getAttributes().getNamedItem("nombre").getNodeValue());
-				System.out.println(element.getAttributes().getNamedItem("nombre").getNodeValue());
 				group.setgID(Integer.parseInt(element.getAttributes().getNamedItem("gId").getNodeValue()));
-				System.out.println(element.getAttributes().getNamedItem("gId").getNodeValue());
 
 				grupos.add(group);
 
@@ -137,7 +130,6 @@ public class UserSystemImpl implements UserSystemInterface {
 
 					if (grupSecs.charAt(cont) == (',')
 							&& (nuevoGrupSec = getGroupByName(grupSecs.substring(posIni, cont - 1))) != null) {
-						System.out.println("a que aqui no entra");
 						user.setSecundaryGroups(nuevoGrupSec);
 						cont++;
 						posIni = cont;
@@ -203,9 +195,6 @@ public class UserSystemImpl implements UserSystemInterface {
 
 			for (int i = 0; i < usuarios.size(); i++) {
 				usuarioNuevo = document.createElement("usuario");
-
-				System.out.println("nombre " + usuarios.get(i).getName() + " "
-						+ usuarios.get(i).getMainGroup().getName() + " " + i + "usuarios" + usuarios.size());
 
 				usuarioNuevo.setAttribute("grupoPrincipal", usuarios.get(i).getMainGroup().getName());
 
@@ -381,8 +370,6 @@ public class UserSystemImpl implements UserSystemInterface {
 	@Override
 	public void addUserToGroup(User user, Group group) {
 		if (user != null && group != null) {
-
-			System.out.println(user.getMainGroup());
 
 			if (user.getMainGroup().getgID() != group.getgID() && !user.isInGroup(group)) {
 				group.setMiembros(user);

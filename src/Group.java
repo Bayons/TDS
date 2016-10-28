@@ -77,8 +77,6 @@ public class Group {
 
 		copy[copy.length - 1] = usuario;
 		miembros = copy.clone();
-		System.out.println("tamaño " + miembros.length);
-
 	}
 
 	/**

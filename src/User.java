@@ -236,7 +236,9 @@ public class User {
 
 	/**
 	 * Getter del atributo secundaryGroups
-	 * @return Group[] lista de los grupos secundarios a los que pertenece el usuario
+	 * 
+	 * @return Group[] lista de los grupos secundarios a los que pertenece el
+	 *         usuario
 	 */
 	public Group[] getSecundaryGroups() {
 		return secundaryGroups;
@@ -249,7 +251,13 @@ public class User {
 		System.out.println("Nombre del usuario: " + name);
 		System.out.println("UID del usuario: " + uId);
 		System.out.println("Pass: " + password);
-		System.out.println("MG: " + mainGroup.getName() + "\n");
+		System.out.println("MG: " + mainGroup.getName());
+		System.out.println("SG:");
+		for (int i = 0; i < secundaryGroups.length; i++) {
+			if (secundaryGroups[i] != null)
+				System.out.println(secundaryGroups[i].getName());
+		}
+		System.out.println();
 	}
 
 }
