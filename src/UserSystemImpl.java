@@ -167,7 +167,7 @@ public class UserSystemImpl implements UserSystemInterface {
 	public void updateTo(Path pathToXML) {
 
 		FileWriter output;
-		Source source;
+		DOMSource source;
 
 		DocumentBuilderFactory domParserFactory;
 		DocumentBuilder parser;
@@ -185,7 +185,7 @@ public class UserSystemImpl implements UserSystemInterface {
 			document = parser.newDocument();
 			source = new DOMSource(document);
 			PrintWriter pw = new PrintWriter(output);
-			Result result = new StreamResult(pw);
+			StreamResult result = new StreamResult(pw);
 
 			Element sistema = document.createElement("sistema");
 			document.appendChild(sistema);
