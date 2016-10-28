@@ -1,10 +1,9 @@
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -22,17 +21,24 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+/**
+ * Implementación de la interfaz UserSystemInterface
+ * 
+ * @author Guillermo Anta Alonso
+ * @author Mario Gomez Fernandez
+ * @author Miguel Bayon Sanz
+ *
+ */
 public class UserSystemImpl implements UserSystemInterface {
 
-	ArrayList<User> usuarios = new ArrayList<User>();
+	private ArrayList<User> usuarios = new ArrayList<User>();
 
-	ArrayList<Group> grupos = new ArrayList<Group>();
+	private ArrayList<Group> grupos = new ArrayList<Group>();
 
 	boolean modified = false;
 
@@ -79,17 +85,14 @@ public class UserSystemImpl implements UserSystemInterface {
 				element = (Element) nodeList.item(i);
 
 				node = nodeList.item(i);
-				group.setNode(node);
 
 				group.setName(element.getAttributes().getNamedItem("nombre").getNodeValue());
 				System.out.println(element.getAttributes().getNamedItem("nombre").getNodeValue());
 				group.setgID(Integer.parseInt(element.getAttributes().getNamedItem("gId").getNodeValue()));
 				System.out.println(element.getAttributes().getNamedItem("gId").getNodeValue());
-				
-				
-				
+
 				grupos.add(group);
-				
+
 			}
 
 			nodeList = document.getElementsByTagName("usuario");
@@ -101,7 +104,6 @@ public class UserSystemImpl implements UserSystemInterface {
 				user = new User();
 
 				element = (Element) nodeList.item(i);
-				user.setNodo(element);
 
 				NodeList nombre = element.getElementsByTagName("nombre");
 				NodeList password = element.getElementsByTagName("password");
@@ -116,32 +118,28 @@ public class UserSystemImpl implements UserSystemInterface {
 				user.setShell(element.getAttributes().getNamedItem("shell").getNodeValue());
 
 				grupPrinc = element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue();
-				
+
 				for (j = 0; j < grupos.size(); j++) {
 					if (grupos.get(j).getName().equals(grupPrinc)) {
 						user.setMainGroup(grupos.get(j));
-						
+
 					}
 				}
 
 				grupSecs = element.getAttributes().getNamedItem("grupoSecundarios").getNodeValue();
 				posIni = 0;
 				for (int cont = 0; cont < grupSecs.length(); cont++) {
-				
-				
-					
-					if(!grupSecs.equals("null")){
-						
+
+					if (!grupSecs.equals("null")) {
+
 						user.setSecundaryGroups(getGroupByName(grupSecs));
 					}
-					
-					
-					// a�adimos grupo secundario si existe
-					if (grupSecs.charAt(cont)==(',')
+
+					if (grupSecs.charAt(cont) == (',')
 							&& (nuevoGrupSec = getGroupByName(grupSecs.substring(posIni, cont - 1))) != null) {
 						System.out.println("a que aqui no entra");
 						user.setSecundaryGroups(nuevoGrupSec);
-						cont++; // nos saltamos el espacio
+						cont++;
 						posIni = cont;
 					}
 				}
@@ -168,10 +166,8 @@ public class UserSystemImpl implements UserSystemInterface {
 	@Override
 	public void updateTo(Path pathToXML) {
 
-		File file;
 		FileWriter output;
 		Source source;
-		Path path = pathToXML;
 
 		DocumentBuilderFactory domParserFactory;
 		DocumentBuilder parser;
@@ -184,8 +180,6 @@ public class UserSystemImpl implements UserSystemInterface {
 
 		try {
 
-			// Rellenar XML
-
 			output = new FileWriter(pathToXML.toFile());
 			parser = domParserFactory.newDocumentBuilder();
 			document = parser.newDocument();
@@ -193,7 +187,6 @@ public class UserSystemImpl implements UserSystemInterface {
 			PrintWriter pw = new PrintWriter(output);
 			Result result = new StreamResult(pw);
 
-			// Crear nodos
 			Element sistema = document.createElement("sistema");
 			document.appendChild(sistema);
 
@@ -210,23 +203,20 @@ public class UserSystemImpl implements UserSystemInterface {
 
 			for (int i = 0; i < usuarios.size(); i++) {
 				usuarioNuevo = document.createElement("usuario");
-				
-				
-				System.out.println("nombre "+usuarios.get(i).getName()+" "+usuarios.get(i).getMainGroup().getName()+" "+i+"usuarios"+ usuarios.size());
-				
+
+				System.out.println("nombre " + usuarios.get(i).getName() + " "
+						+ usuarios.get(i).getMainGroup().getName() + " " + i + "usuarios" + usuarios.size());
+
 				usuarioNuevo.setAttribute("grupoPrincipal", usuarios.get(i).getMainGroup().getName());
-				
 
-
-				
 				if (usuarios.get(i).getSecundaryGroups() == null) {
-					// A�ade todos los grupos secundarios separados por una coma
-					// y un espacio
+
 					usuarioNuevo.setAttribute("grupoSecundarios", "null");
 				} else {
 					grSec = new StringBuilder();
-					for (int j = 0; j < usuarios.get(i).getSecundaryGroups().length; j++) {
-						grSec.append(usuarios.get(i).getSecundaryGroups()[j].getName());
+					for (int j = 0; j < usuarios.get(i).getSecundaryGroups().length
+							&& usuarios.get(i).getSecundaryGroups()[j] != null; j++) {
+						grSec.append(usuarios.get(i).getSecundaryGroups()[j].getName()); // ERROR
 						if (j != usuarios.get(i).getSecundaryGroups().length - 1)
 							grSec.append(", ");
 					}
@@ -310,7 +300,7 @@ public class UserSystemImpl implements UserSystemInterface {
 		}
 
 		if (!exists) {
-			User user = new User(name, uId, password, pathToHome, fullName, shell, mainGroup, secundaryGroups, null);
+			User user = new User(name, uId, password, pathToHome, fullName, shell, mainGroup, secundaryGroups);
 			usuarios.add(user);
 			modified = true;
 		}
@@ -359,7 +349,6 @@ public class UserSystemImpl implements UserSystemInterface {
 	public Group getGroupByName(String name) {
 		Group group = null;
 		for (int i = 0; i < grupos.size(); i++) {
-			//System.out.println(grupos.get(i).getName() +"----------" +name);
 			if (grupos.get(i).getName().equals(name)) {
 				group = grupos.get(i);
 				return group;
@@ -384,24 +373,25 @@ public class UserSystemImpl implements UserSystemInterface {
 		if (!exists) {
 			Group group = new Group(name, gId);
 			grupos.add(group);
-			
+
 			modified = true;
 		}
 	}
 
 	@Override
 	public void addUserToGroup(User user, Group group) {
-		if(user != null && group != null){
-			
-		    	System.out.println(user.getMainGroup());
-		    	
-			   if (user.getMainGroup().getgID() != group.getgID() && !user.isInGroup(group)) {
-			    group.setMiembros(user);
-			    user.setSecundaryGroups(group);
-			    modified = true;
-			   }
-			  }
-			 }
+		if (user != null && group != null) {
+
+			System.out.println(user.getMainGroup());
+
+			if (user.getMainGroup().getgID() != group.getgID() && !user.isInGroup(group)) {
+				group.setMiembros(user);
+				user.setSecundaryGroups(group);
+				modified = true;
+			}
+		}
+	}
+
 	@Override
 	public void removeUserFromGroup(User user, Group group) {
 		if (user.getMainGroup().getgID() != group.getgID() && user.isInGroup(group)) {
@@ -410,9 +400,10 @@ public class UserSystemImpl implements UserSystemInterface {
 			modified = true;
 		}
 	}
-	//No funciona
+
+	// No funciona
 	@Override
-	
+
 	public void removeUserFromSystem(User user) {
 
 		if (usuarios.contains(user)) {
@@ -437,6 +428,14 @@ public class UserSystemImpl implements UserSystemInterface {
 				}
 			}
 		}
+	}
+
+	public ArrayList<User> getUsuarios() {
+		return (ArrayList<User>) usuarios.clone();
+	}
+
+	public ArrayList<Group> getGrupos() {
+		return (ArrayList<Group>) grupos.clone();
 	}
 
 }

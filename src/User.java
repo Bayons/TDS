@@ -1,13 +1,19 @@
 import java.io.File;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import org.w3c.dom.Node;
 
+
+/**
+ * Clase User, modela un usuario de del Sistema
+ * 
+ * @author Guillermo Anta Alonso
+ * @author Mario Gomez Fernandez
+ * @author Miguel Bayon Sanz
+ *
+ */
 public class User {
-
+	
 	private String name;
-
+	
 	private int uId;
 
 	private String password;
@@ -21,14 +27,24 @@ public class User {
 	private Group mainGroup;
 
 	private Group[] secundaryGroups = new Group[0];
-
-	private Node nodo;
-
+	
+	
 	public User() {
 	}
-
+	
+	/**Constructor de la clase User, crea e inicializa User. 
+	 * 
+	 * @param name
+	 * @param uId
+	 * @param password
+	 * @param pathToHome
+	 * @param fullName
+	 * @param shell
+	 * @param mainGroup
+	 * @param secundaryGroups
+	 */
 	public User(String name, int uId, String password, Path pathToHome, String fullName, EnumShell shell,
-			Group mainGroup, Group[] secundaryGroups, Node nodo) {
+			Group mainGroup, Group[] secundaryGroups) {
 
 		this.name = name;
 		this.uId = uId;
@@ -36,12 +52,18 @@ public class User {
 		this.pathToHome = pathToHome;
 		this.fullName = fullName;
 		this.shell = shell;
-
 		this.mainGroup = mainGroup;
 		this.secundaryGroups = secundaryGroups.clone();
 
-		this.nodo = nodo;
-
+	}
+	
+	
+	/**
+	 * 
+	 * @param uId
+	 */
+	public void setuId(int uId) {
+		this.uId = uId;
 	}
 
 	public boolean isInGroup(Group group) {
@@ -72,7 +94,7 @@ public class User {
 
 		Group[] copy = new Group[secundaryGroups.length - 1];
 
-		for (int i = 0, j = 0; i < secundaryGroups.length; i++, j++) {
+		for (int i = 0, j = 0; i < secundaryGroups.length && j < copy.length; i++, j++) {
 			if (secundaryGroups[i].getgID() == secundaryGroup.getgID())
 				i++;
 			copy[j] = secundaryGroups[i];
@@ -91,10 +113,6 @@ public class User {
 
 	public int getuId() {
 		return uId;
-	}
-
-	public void setuId(int uId) {
-		this.uId = uId;
 	}
 
 	public String getPassword() {
@@ -145,19 +163,12 @@ public class User {
 		return secundaryGroups;
 	}
 
-	public Node getNodo() {
-		return nodo;
-	}
-
-	public void setNodo(org.w3c.dom.Node userNode) {
-		this.nodo = userNode;
-	}
 	
 	public void imprimirUsuario(){
 		  System.out.println("Nombre del usuario: " +name);
 		  System.out.println("UID del usuario: " +uId);
 		  System.out.println("Pass: " +password);
-		  System.out.println("MG: " +mainGroup +"\n");
+		  System.out.println("MG: " +mainGroup.getName() +"\n");
 		 }
 
 }
