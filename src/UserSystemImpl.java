@@ -167,9 +167,57 @@ public class UserSystemImpl implements UserSystemInterface {
 			
 			Element usuarioNuevo;
 			Element grupoNuevo;
+			
+			StringBuilder grSec;
+			Element tnombre;
+			Element tpassword;
+			Element thome;
+			Element tnombcomp;
+			
 			for (int i = 0; i < usuarios.size(); i++){
 				usuarioNuevo = document.createElement("usuario");
-				usuarioNuevo.setAttribute("grupoPrincipal", /*su grupo principal*/);
+				usuarioNuevo.setAttribute("grupoPrincipal", usuarios.get(i).getMainGroup().getName());
+				
+				if (usuarios.get(i).getSecundaryGroups().length==0){ //Añade todos los grupos secundarios separados por una coma y un espacio
+					usuarioNuevo.setAttribute("grupoSecundarios", "null");
+				} else{
+					grSec = new StringBuilder();
+					for (int j = 0; j<usuarios.get(i).getSecundaryGroups().length; j++){
+						grSec.append(usuarios.get(i).getSecundaryGroups()[j].getName());
+						if (j!=usuarios.get(i).getSecundaryGroups().length-1)
+							grSec.append(", ");
+					}
+					usuarioNuevo.setAttribute("grupoSecundarios", grSec.toString());
+				}
+				usuarioNuevo.setAttribute("shell", usuarios.get(i).getShell().name());
+				usuarioNuevo.setAttribute("uId", Integer.toString(usuarios.get(i).getuId()));
+				
+				tnombre = document.createElement("nombre");
+				tnombre.appendChild(document.createTextNode(usuarios.get(i).getName()));
+				usuarioNuevo.appendChild(tnombre);
+				
+				tpassword = document.createElement("password");
+				tpassword.appendChild(document.createTextNode(usuarios.get(i).getPassword()));
+				usuarioNuevo.appendChild(tpassword);
+				
+				thome = document.createElement("home");
+				thome.appendChild(document.createTextNode(usuarios.get(i).getPathToHome().toString()));
+				usuarioNuevo.appendChild(thome);
+				
+				tnombcomp = document.createElement("nombreCompleto");
+				tnombcomp.appendChild(document.createTextNode(usuarios.get(i).getFullName()));
+				usuarioNuevo.appendChild(tnombcomp);
+				
+				sistema.appendChild(usuarioNuevo);
+			}
+			
+			for (int i = 0; i < grupos.size(); i++){
+				grupoNuevo = document.createElement("grupo");
+				grupoNuevo.setAttribute("gId", Integer.toString(grupos.get(i).getgID()));
+				grupoNuevo.setAttribute("miembros", Integer.toString(grupos.get(i).getMiembros().length));
+				grupoNuevo.setAttribute("nombre", grupos.get(i).getName());
+				
+				sistema.appendChild(grupoNuevo);
 			}
 			
 			transformer = tFactory.newTransformer();
