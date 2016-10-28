@@ -58,7 +58,7 @@ public class Main {
 		programa.removeGroupFromSystem(grupo);
 		imprimirListas();
 
-		System.out.println("----------Guardamos");
+		System.out.println("----------Volcamos la informacion en el xml Resultado.xml");
 		Path xmlNuevo = FileSystems.getDefault().getPath("", "Resultado.xml");
 		programa.updateTo(xmlNuevo);
 	}
