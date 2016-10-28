@@ -88,6 +88,9 @@ public class UserSystemImpl implements UserSystemInterface {
 			}
 
 			nodeList = document.getElementsByTagName("usuario");
+			String grupSecs;
+			int pos1;
+			Group nuevoGrupSec;
 
 			for (i = 0; i < nodeList.getLength(); i++) {
 				user = new User();
@@ -110,6 +113,19 @@ public class UserSystemImpl implements UserSystemInterface {
 				for (j = 0; j < grupos.size(); j++) {
 					if (grupos.get(j).equals(element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue())) {
 						user.setMainGroup(grupos.get(j));
+					}
+				}
+
+				grupSecs = element.getAttributes().getNamedItem("grupoSecundarios").getNodeValue();
+				pos1 = 0;
+				for (int cont = 0; cont < grupSecs.length(); cont++) {
+					
+					// añadimos grupo secundario si existe
+					if (grupSecs.charAt(cont) == ','
+							&& (nuevoGrupSec = getGroupByName(grupSecs.substring(pos1, cont - 1))) != null) {
+						user.setSecundaryGroups(nuevoGrupSec);
+						cont++; //nos saltamos el espacio
+						pos1 = cont;
 					}
 				}
 
@@ -150,10 +166,9 @@ public class UserSystemImpl implements UserSystemInterface {
 		Transformer transformer;
 
 		try {
-			
-			
-			//Rellenar XML 
-			
+
+			// Rellenar XML
+
 			output = new FileWriter(pathToXML.toFile());
 			parser = domParserFactory.newDocumentBuilder();
 			document = parser.newDocument();
@@ -161,67 +176,76 @@ public class UserSystemImpl implements UserSystemInterface {
 			PrintWriter pw = new PrintWriter(output);
 			Result result = new StreamResult(pw);
 
-			//Crear nodos
+			// Crear nodos
 			Element sistema = document.createElement("sistema");
 			document.appendChild(sistema);
-			
+
 			Element usuarioNuevo;
 			Element grupoNuevo;
-			
+
 			StringBuilder grSec;
 			Element tnombre;
 			Element tpassword;
 			Element thome;
 			Element tnombcomp;
-			
-			for (int i = 0; i < usuarios.size(); i++){
+
+			for (int i = 0; i < usuarios.size(); i++) {
 				usuarioNuevo = document.createElement("usuario");
 				usuarioNuevo.setAttribute("grupoPrincipal", usuarios.get(i).getMainGroup().getName());
-				
-				if (usuarios.get(i).getSecundaryGroups().length==0){ //Añade todos los grupos secundarios separados por una coma y un espacio
+
+				if (usuarios.get(i).getSecundaryGroups().length == 0) { // Añade
+																		// todos
+																		// los
+																		// grupos
+																		// secundarios
+																		// separados
+																		// por
+																		// una
+																		// coma
+																		// y un
+																		// espacio
 					usuarioNuevo.setAttribute("grupoSecundarios", "null");
-				} else{
+				} else {
 					grSec = new StringBuilder();
-					for (int j = 0; j<usuarios.get(i).getSecundaryGroups().length; j++){
+					for (int j = 0; j < usuarios.get(i).getSecundaryGroups().length; j++) {
 						grSec.append(usuarios.get(i).getSecundaryGroups()[j].getName());
-						if (j!=usuarios.get(i).getSecundaryGroups().length-1)
+						if (j != usuarios.get(i).getSecundaryGroups().length - 1)
 							grSec.append(", ");
 					}
 					usuarioNuevo.setAttribute("grupoSecundarios", grSec.toString());
 				}
 				usuarioNuevo.setAttribute("shell", usuarios.get(i).getShell().name());
 				usuarioNuevo.setAttribute("uId", Integer.toString(usuarios.get(i).getuId()));
-				
+
 				tnombre = document.createElement("nombre");
 				tnombre.appendChild(document.createTextNode(usuarios.get(i).getName()));
 				usuarioNuevo.appendChild(tnombre);
-				
+
 				tpassword = document.createElement("password");
 				tpassword.appendChild(document.createTextNode(usuarios.get(i).getPassword()));
 				usuarioNuevo.appendChild(tpassword);
-				
+
 				thome = document.createElement("home");
 				thome.appendChild(document.createTextNode(usuarios.get(i).getPathToHome().toString()));
 				usuarioNuevo.appendChild(thome);
-				
+
 				tnombcomp = document.createElement("nombreCompleto");
 				tnombcomp.appendChild(document.createTextNode(usuarios.get(i).getFullName()));
 				usuarioNuevo.appendChild(tnombcomp);
-				
+
 				sistema.appendChild(usuarioNuevo);
 			}
-			
-			for (int i = 0; i < grupos.size(); i++){
+
+			for (int i = 0; i < grupos.size(); i++) {
 				grupoNuevo = document.createElement("grupo");
 				grupoNuevo.setAttribute("gId", Integer.toString(grupos.get(i).getgID()));
 				grupoNuevo.setAttribute("miembros", Integer.toString(grupos.get(i).getMiembros().length));
 				grupoNuevo.setAttribute("nombre", grupos.get(i).getName());
-				
+
 				sistema.appendChild(grupoNuevo);
 			}
-			
+
 			transformer = tFactory.newTransformer();
-			
 
 			transformer.transform(source, result);
 
