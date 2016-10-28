@@ -88,8 +88,8 @@ public class UserSystemImpl implements UserSystemInterface {
 			}
 
 			nodeList = document.getElementsByTagName("usuario");
-			String grupSecs;
-			int pos1;
+			String grupSecs, grupPrinc;
+			int posIni;
 			Group nuevoGrupSec;
 
 			for (i = 0; i < nodeList.getLength(); i++) {
@@ -110,22 +110,23 @@ public class UserSystemImpl implements UserSystemInterface {
 				user.setFullName(nombreCompleto.item(0).getFirstChild().getTextContent());
 				user.setShell(element.getAttributes().getNamedItem("shell").getNodeValue());
 
+				grupPrinc = element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue();
 				for (j = 0; j < grupos.size(); j++) {
-					if (grupos.get(j).equals(element.getAttributes().getNamedItem("grupoPrincipal").getNodeValue())) {
+					if (grupos.get(j).equals(grupPrinc)) {
 						user.setMainGroup(grupos.get(j));
 					}
 				}
 
 				grupSecs = element.getAttributes().getNamedItem("grupoSecundarios").getNodeValue();
-				pos1 = 0;
+				posIni = 0;
 				for (int cont = 0; cont < grupSecs.length(); cont++) {
-					
+
 					// añadimos grupo secundario si existe
 					if (grupSecs.charAt(cont) == ','
-							&& (nuevoGrupSec = getGroupByName(grupSecs.substring(pos1, cont - 1))) != null) {
+							&& (nuevoGrupSec = getGroupByName(grupSecs.substring(posIni, cont - 1))) != null) {
 						user.setSecundaryGroups(nuevoGrupSec);
-						cont++; //nos saltamos el espacio
-						pos1 = cont;
+						cont++; // nos saltamos el espacio
+						posIni = cont;
 					}
 				}
 
@@ -189,21 +190,15 @@ public class UserSystemImpl implements UserSystemInterface {
 			Element thome;
 			Element tnombcomp;
 
+			usuarios.get(0).getMainGroup().imprimirGrupo();
+
 			for (int i = 0; i < usuarios.size(); i++) {
 				usuarioNuevo = document.createElement("usuario");
 				usuarioNuevo.setAttribute("grupoPrincipal", usuarios.get(i).getMainGroup().getName());
 
-				if (usuarios.get(i).getSecundaryGroups().length == 0) { // Añade
-																		// todos
-																		// los
-																		// grupos
-																		// secundarios
-																		// separados
-																		// por
-																		// una
-																		// coma
-																		// y un
-																		// espacio
+				if (usuarios.get(i).getSecundaryGroups().length == 0) {
+					// Añade todos los grupos secundarios separados por una coma
+					// y un espacio
 					usuarioNuevo.setAttribute("grupoSecundarios", "null");
 				} else {
 					grSec = new StringBuilder();

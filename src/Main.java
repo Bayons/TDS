@@ -26,5 +26,9 @@ public class Main {
 		for (i=0; i<programa.usuarios.size();i++){
 			programa.usuarios.get(i).imprimir();
 		}
+		
+		System.out.println("\n\nGuardamos");
+		Path xmlNuevo = FileSystems.getDefault().getPath("", "Resultado.xml");
+		programa.updateTo(xmlNuevo);
 	}
 }
