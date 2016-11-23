@@ -42,7 +42,7 @@ public class BoletinTest {
 			ESPERADO = boletin.getNoticias().size();
 			boletin.anadirNoticia(noticia);
 
-			assertNotEquals(0, boletin.getNoticias().size());
+			assertNotEquals(ESPERADO, boletin.getNoticias().size());
 			assertEquals(ESPERADO + 1, boletin.getNoticias().size());
 
 		} catch (MalformedURLException e1) {
@@ -144,7 +144,7 @@ public class BoletinTest {
 
 		assertTrue(erroresTotales == 0);
 	}
-
+	@Test
 	public void testFechaNoticiaMasAntiguas() {
 		Noticia noticia1 = new Noticia("Titular Antiguo", new GregorianCalendar(1998, 06, 28), "FuenteUno", null,
 				Categoria.economia);

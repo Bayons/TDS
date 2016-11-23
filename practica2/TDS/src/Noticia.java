@@ -16,7 +16,7 @@ public class Noticia {
 	private Categoria categoria;
 
 	public Noticia(String titular, GregorianCalendar fechaPublicacion, String fuente, URL url, Categoria categoria) {
-
+		/*
 		if (titularValido(titular))
 			this.titular = titular;
 
@@ -24,11 +24,11 @@ public class Noticia {
 		this.fuente = fuente;
 		this.url = url;
 		this.categoria = categoria;
-
+	*/
 	}
 
 	public boolean titularValido(String titular) {
-
+		/*
 		String palabras[] = titular.split(" ");
 
 		if (titular == null || palabras.length > 13) {
@@ -36,15 +36,20 @@ public class Noticia {
 		}
 
 		return true;
+		*/
+		return false;
 	}
 
 	public int comparaFecha(Noticia noticia) {
-		// 0 si es igual, -1 noticiadada despues, 1 noticia dada antes
+		/*
+		// 0 si es igual, -1 noticia dada despues, 1 noticia dada antes
 		return fechaPublicacion.compareTo(noticia.getFechaPublicacion());
+		*/
+		return -1;
 	}
 
 	public boolean noticiaSimilar(Noticia noticia) {
-
+		/*
 		GregorianCalendar inicio = new GregorianCalendar(2016, 1, 1);
 		GregorianCalendar fin = new GregorianCalendar(2016, 1, 3);
 
@@ -69,26 +74,44 @@ public class Noticia {
 		}
 
 		return true;
+		*/
+		return false;
 	} // titular categoria fecha de publicacion(2 dias de diferencia) =
 
 	public String getTitular() {
+		/*
 		return titular;
+		*/
+		return null;
+		
 	}
 
 	public GregorianCalendar getFechaPublicacion() {
+		/*
 		return fechaPublicacion;
+	*/return null;
 	}
 
 	public String getFuente() {
+		/*
 		return fuente;
+		*/
+		return null;
 	}
 
 	public URL getUrl() {
+		/*
 		return url;
+		*/
+		return null;
 	}
 
 	public Categoria getCategoria() {
+		/*
 		return categoria;
+		*/
+		return null;
+		
 	}
 
 }
